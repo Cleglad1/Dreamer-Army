@@ -1,0 +1,50 @@
+library(shiny)
+library(shinythemes)
+
+ui= flidPage(,
+
+theme= shinytheme("united"),
+
+titlePanel("2 Group Feasibility"),
+
+headerPanel("Sliders"),
+sidebarPanel(
+  sliderInput("Responses", "Survey Responses", 10,40,5)),
+  
+  
+  mainPanel(
+    plotOutput("Chart"),
+    textOutput("Rec")
+    ))
+    
+   
+server <- function(input, output) {
+
+    output$Chart= renderPlot({
+    
+    Seq=seq(from=1,to= input$Response, by=1)
+    
+    Bound1=((1.98*sqrt(Seq*(1-(Seq*1/input$Responses)))))
+    
+    
+    pot(x=Seq,Bound1, type='l',col='red',xlab="# of negative responses",ylab="Difference Needed to draw Conclusion",main="Feasibility",ylim=c(1,input$Responses/2-.2),xlim=c(1,input$Responses))
+    lines(x=Seq,y=Seq,col="blue")
+    lines(x=Seq,y=input$Responses-Seq, col="green")
+    text(x=3,y=input$Responses/2-1,"Negative Responses",col="blue")
+    text(x=3,y=input$Responses/2--1.5,"Positive Responses",col="greem")
+    text(x=6,y=3, "Minimum Difference Needed")
+    
+    
+    })
+    
+    output$Rec= renderText({
+    
+      ""
+      
+     })
+     }
+     
+     shinyApp(ui,server)
+
+
+
